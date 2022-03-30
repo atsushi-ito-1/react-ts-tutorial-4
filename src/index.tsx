@@ -33,7 +33,7 @@ type BoardProps = {
   onClick: (i: number) => void;
 };
 class Board extends React.Component<BoardProps> {
-  renderSquare(i: number, pieces: number[]) {
+  renderSquare(i: number, pieces: Pieces) {
     let type: SquareType = "square normal-square";
     if (pieces && pieces.includes(i)) type = "square good-square";
     return (
@@ -45,7 +45,7 @@ class Board extends React.Component<BoardProps> {
       />
     );
   }
-  renderRow(y: number, pieces: number[]) {
+  renderRow(y: number, pieces: Pieces) {
     const row = [];
     for (let x = 0; x < 3; x++) {
       row.push(this.renderSquare(y * 3 + x, pieces));
@@ -57,7 +57,7 @@ class Board extends React.Component<BoardProps> {
     );
   }
   render() {
-    let pieces: any = null;
+    let pieces: Pieces = null;
     const winnerState = winner(this.props.squares)
     if (winnerState) pieces = winnerState.pieces;
     const board = [];
@@ -180,7 +180,7 @@ function winner(squares: SquareState[]): WinnerState {
   return null;
 }
 
-function draw(squares: any[]) {
+function draw(squares: SquareState[]) {
   for (const square of squares) {
     if (!square) return false;
   }
