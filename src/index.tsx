@@ -58,7 +58,7 @@ class Board extends React.Component<BoardProps> {
   }
   render() {
     let pieces: Pieces = null;
-    const winnerState = winner(this.props.squares)
+    const winnerState = winner(this.props.squares);
     if (winnerState) pieces = winnerState.pieces;
     const board = [];
     for (let y = 0; y < 3; y++) {
@@ -155,13 +155,14 @@ class Game extends React.Component<GameProps, GameState> {
 
 ReactDOM.render(<Game />, document.getElementById("root"));
 
-type Pieces = [number, number, number] | null;
+type PieceLine = [number, number, number];
+type Pieces = PieceLine | null;
 type WinnerState = {
   name: SquareState;
   pieces: Pieces;
 } | null;
 function winner(squares: SquareState[]): WinnerState {
-  const lines: any[] = [
+  const lines: PieceLine[] = [
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
