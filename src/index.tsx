@@ -9,13 +9,11 @@ type SquareProps = {
   type: SquareType;
   onClick: () => void;
 };
-function Square(props: SquareProps) {
-  return (
-    <button className={props.type} onClick={props.onClick}>
-      {props.value}
-    </button>
-  );
-}
+const Square = (props: SquareProps) => (
+  <button className={props.type} onClick={props.onClick}>
+    {props.value}
+  </button>
+);
 
 type BoardState = [
   SquareState,
@@ -32,23 +30,23 @@ type BoardProps = {
   squares: BoardState;
   onClick: (i: number) => void;
 };
-class Board extends React.Component<BoardProps> {
-  renderSquare(i: number, pieces: Pieces) {
+const Board = (props: BoardProps) => {
+  const renderSquare = (i: number, pieces: Pieces) => {
     let type: SquareType = "square normal-square";
     if (pieces && pieces.includes(i)) type = "square good-square";
     return (
       <Square
-        value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)}
+        value={props.squares[i]}
+        onClick={() => props.onClick(i)}
         type={type}
         key={i}
       />
     );
   }
-  renderRow(y: number, pieces: Pieces) {
+  const renderRow = (y: number, pieces: Pieces) => {
     const row = [];
     for (let x = 0; x < 3; x++) {
-      row.push(this.renderSquare(y * 3 + x, pieces));
+      row.push(renderSquare(y * 3 + x, pieces));
     }
     return (
       <div className="board-row" key={y}>
@@ -56,17 +54,16 @@ class Board extends React.Component<BoardProps> {
       </div>
     );
   }
-  render() {
-    let pieces: Pieces = null;
-    const winnerState = winner(this.props.squares);
-    if (winnerState) pieces = winnerState.pieces;
-    const board = [];
-    for (let y = 0; y < 3; y++) {
-      board.push(this.renderRow(y, pieces));
-    }
-    return <div>{board}</div>;
+  let pieces: Pieces = null;
+  const winnerState = winner(props.squares);
+  if (winnerState) pieces = winnerState.pieces;
+  const board = [];
+  for (let y = 0; y < 3; y++) {
+    board.push(renderRow(y, pieces));
   }
-}
+  return <div>{board}</div>;
+};
+
 type OneHistory = {
   squares: BoardState;
   position: number;
