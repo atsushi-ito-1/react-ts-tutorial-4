@@ -112,9 +112,7 @@ const Game = (props: GameProps) => {
       name="direction"
       value={direction}
       checked={direction === d}
-      onChange={() =>
-        setDirection(d)
-      }
+      onChange={() => setDirection(d)}
     />
   );
   return (
