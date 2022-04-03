@@ -42,7 +42,7 @@ const Board = (props: BoardProps) => {
         key={i}
       />
     );
-  }
+  };
   const renderRow = (y: number, pieces: Pieces) => {
     const row = [];
     for (let x = 0; x < 3; x++) {
@@ -53,7 +53,7 @@ const Board = (props: BoardProps) => {
         {row}
       </div>
     );
-  }
+  };
   let pieces: Pieces = null;
   const winnerState = winner(props.squares);
   if (winnerState) pieces = winnerState.pieces;
@@ -70,69 +70,50 @@ type OneHistory = {
 };
 type GameProps = {};
 type Direction = "desc" | "asc";
-type GameState = {
-  history: OneHistory[];
-  turn: number;
-  direction: Direction;
-};
 const Game = (props: GameProps) => {
-  const InitialState = {
-    history: [
-      {
-        squares: [null, null, null, null, null, null, null, null, null],
-        position: -1,
-      },
-    ],
-    turn: 0,
-    direction: "desc",
-  };
-  const [state, setState] = useState(InitialState as GameState);
+  const initialHistory = [
+    {
+      squares: [null, null, null, null, null, null, null, null, null],
+      position: -1,
+    },
+  ];
+  const [history, setHistory] = useState(initialHistory as OneHistory[]);
+  const [turn, setTurn] = useState(0 as number);
+  const [direction, setDirection] = useState("desc" as Direction);
   function handleClick(i: number) {
-    const history = state.history.slice(0, state.turn + 1);
-    const squares = last(history).squares.slice();
+    const subHistory = history.slice(0, turn + 1);
+    const squares = last(subHistory).squares.slice();
     if (winner(squares) || squares[i]) return;
-    squares[i] = pieceMark(state.turn);
-    setState({
-      history: history.concat([{ squares, position: i }]),
-      turn: state.turn + 1,
-      direction: state.direction,
-    });
+    squares[i] = pieceMark(turn);
+    setHistory(subHistory.concat([{ squares, position: i }]));
+    setTurn(turn + 1);
   }
   function jumpTo(turn: number) {
-    setState({
-      history: state.history,
-      turn: turn,
-      direction: state.direction,
-    });
+    setTurn(turn);
   }
-  const history = state.history;
-  const squares = history[state.turn].squares;
-  const status = statusLine(squares, state.turn);
-  let moves = history.map((item, turn) => {
-    const description = "Go to turn #" + turn;
+  const squares = history[turn].squares;
+  const status = statusLine(squares, turn);
+  let moves = history.map((item, i) => {
+    const description = "Go to turn #" + i;
     const position = positionStr(item.position);
-    const current = turn === state.turn ? "current-turn" : "other-turn";
+    const current = i === turn ? "current-turn" : "other-turn";
     return (
-      <li key={turn}>
-        <button onClick={() => jumpTo(turn)} className={current}>
+      <li key={i}>
+        <button onClick={() => jumpTo(i)} className={current}>
           {description} {position}
         </button>
       </li>
     );
   });
-  if (state.direction === "asc") moves = moves.reverse();
-  const directionButton = (direction: Direction) => (
+  if (direction === "asc") moves = moves.reverse();
+  const directionButton = (d: Direction) => (
     <input
       type="radio"
       name="direction"
       value={direction}
-      checked={state.direction === direction}
+      checked={direction === d}
       onChange={() =>
-        setState({
-          history: state.history,
-          turn: state.turn,
-          direction: direction,
-        })
+        setDirection(d)
       }
     />
   );
@@ -197,7 +178,7 @@ function pieceMark(turn: number) {
 
 function statusLine(squares: SquareState[], turn: number) {
   let status;
-  const winnerState: WinnerState = winner(squares);
+  const winnerState = winner(squares);
   if (winnerState) {
     status = "Winner: " + winnerState.name;
   } else if (draw(squares)) {
