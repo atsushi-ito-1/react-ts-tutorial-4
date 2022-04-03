@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 
 type SquareState = "O" | "X" | null;
-type SquareType = "square normal-square" | "square good-square";
+type SquareType = "square" | "square good-square";
 type SquareProps = {
   value: SquareState;
   type: SquareType;
@@ -32,7 +32,7 @@ type BoardProps = {
 };
 const Board = (props: BoardProps) => {
   const renderSquare = (i: number, pieces: Pieces) => {
-    let type: SquareType = "square normal-square";
+    let type: SquareType = "square";
     if (pieces && pieces.includes(i)) type = "square good-square";
     return (
       <Square
@@ -42,7 +42,7 @@ const Board = (props: BoardProps) => {
         key={i}
       />
     );
-  }
+  };
   const renderRow = (y: number, pieces: Pieces) => {
     const row = [];
     for (let x = 0; x < 3; x++) {
@@ -53,7 +53,7 @@ const Board = (props: BoardProps) => {
         {row}
       </div>
     );
-  }
+  };
   let pieces: Pieces = null;
   const winnerState = winner(props.squares);
   if (winnerState) pieces = winnerState.pieces;
@@ -69,10 +69,11 @@ type OneHistory = {
   position: number;
 };
 type GameProps = {};
+type Direction = "desc" | "asc";
 type GameState = {
   history: OneHistory[];
   turn: number;
-  direction: "desc" | "asc";
+  direction: Direction;
 };
 class Game extends React.Component<GameProps, GameState> {
   constructor(props: GameProps) {
@@ -118,6 +119,15 @@ class Game extends React.Component<GameProps, GameState> {
       );
     });
     if (this.state.direction === "asc") moves = moves.reverse();
+    const directionButton = (direction: Direction) => (
+      <input
+        type="radio"
+        name="direction"
+        value={direction}
+        checked={this.state.direction === direction}
+        onChange={() => this.setState({ direction: direction })}
+      />
+    );
     return (
       <div className="game">
         <div className="game-board">
@@ -126,22 +136,7 @@ class Game extends React.Component<GameProps, GameState> {
         <div className="game-info">
           <div>{status}</div>
           <div>
-            <input
-              type="radio"
-              name="direction"
-              value="desc"
-              checked={this.state.direction === "desc"}
-              onChange={() => this.setState({ direction: "desc" })}
-            />
-            ↓
-            <input
-              type="radio"
-              name="direction"
-              value="asc"
-              checked={this.state.direction === "asc"}
-              onChange={() => this.setState({ direction: "asc" })}
-            />
-            ↑
+            {directionButton("desc")}↓{directionButton("asc")}↑
           </div>
           <ul>{moves}</ul>
         </div>
