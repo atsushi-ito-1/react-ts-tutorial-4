@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
@@ -42,7 +42,7 @@ const Board = (props: BoardProps) => {
         key={i}
       />
     );
-  };
+  }
   const renderRow = (y: number, pieces: Pieces) => {
     const row = [];
     for (let x = 0; x < 3; x++) {
@@ -53,7 +53,7 @@ const Board = (props: BoardProps) => {
         {row}
       </div>
     );
-  };
+  }
   let pieces: Pieces = null;
   const winnerState = winner(props.squares);
   if (winnerState) pieces = winnerState.pieces;
@@ -75,75 +75,82 @@ type GameState = {
   turn: number;
   direction: Direction;
 };
-class Game extends React.Component<GameProps, GameState> {
-  constructor(props: GameProps) {
-    super(props);
-    this.state = {
-      history: [
-        {
-          squares: [null, null, null, null, null, null, null, null, null],
-          position: -1,
-        },
-      ],
-      turn: 0,
-      direction: "desc",
-    };
-  }
-  handleClick(i: number) {
-    const history = this.state.history.slice(0, this.state.turn + 1);
+const Game = (props: GameProps) => {
+  const InitialState = {
+    history: [
+      {
+        squares: [null, null, null, null, null, null, null, null, null],
+        position: -1,
+      },
+    ],
+    turn: 0,
+    direction: "desc",
+  };
+  const [state, setState] = useState(InitialState as GameState);
+  function handleClick(i: number) {
+    const history = state.history.slice(0, state.turn + 1);
     const squares = last(history).squares.slice();
     if (winner(squares) || squares[i]) return;
-    squares[i] = pieceMark(this.state.turn);
-    this.setState({
+    squares[i] = pieceMark(state.turn);
+    setState({
       history: history.concat([{ squares, position: i }]),
-      turn: this.state.turn + 1,
+      turn: state.turn + 1,
+      direction: state.direction,
     });
   }
-  jumpTo(turn: number) {
-    this.setState({ turn });
-  }
-  render() {
-    const history = this.state.history;
-    const squares = history[this.state.turn].squares;
-    const status = statusLine(squares, this.state.turn);
-    let moves = history.map((item, turn) => {
-      const description = "Go to turn #" + turn;
-      const position = positionStr(item.position);
-      const current = turn === this.state.turn ? "current-turn" : "other-turn";
-      return (
-        <li key={turn}>
-          <button onClick={() => this.jumpTo(turn)} className={current}>
-            {description} {position}
-          </button>
-        </li>
-      );
+  function jumpTo(turn: number) {
+    setState({
+      history: state.history,
+      turn: turn,
+      direction: state.direction,
     });
-    if (this.state.direction === "asc") moves = moves.reverse();
-    const directionButton = (direction: Direction) => (
-      <input
-        type="radio"
-        name="direction"
-        value={direction}
-        checked={this.state.direction === direction}
-        onChange={() => this.setState({ direction: direction })}
-      />
-    );
+  }
+  const history = state.history;
+  const squares = history[state.turn].squares;
+  const status = statusLine(squares, state.turn);
+  let moves = history.map((item, turn) => {
+    const description = "Go to turn #" + turn;
+    const position = positionStr(item.position);
+    const current = turn === state.turn ? "current-turn" : "other-turn";
     return (
-      <div className="game">
-        <div className="game-board">
-          <Board squares={squares} onClick={(i) => this.handleClick(i)} />
-        </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <div>
-            {directionButton("desc")}↓{directionButton("asc")}↑
-          </div>
-          <ul>{moves}</ul>
-        </div>
-      </div>
+      <li key={turn}>
+        <button onClick={() => jumpTo(turn)} className={current}>
+          {description} {position}
+        </button>
+      </li>
     );
-  }
-}
+  });
+  if (state.direction === "asc") moves = moves.reverse();
+  const directionButton = (direction: Direction) => (
+    <input
+      type="radio"
+      name="direction"
+      value={direction}
+      checked={state.direction === direction}
+      onChange={() =>
+        setState({
+          history: state.history,
+          turn: state.turn,
+          direction: direction,
+        })
+      }
+    />
+  );
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board squares={squares} onClick={(i) => handleClick(i)} />
+      </div>
+      <div className="game-info">
+        <div>{status}</div>
+        <div>
+          {directionButton("desc")}↓{directionButton("asc")}↑
+        </div>
+        <ul>{moves}</ul>
+      </div>
+    </div>
+  );
+};
 
 ReactDOM.render(<Game />, document.getElementById("root"));
 
