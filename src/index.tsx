@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import {Button, Radio, RadioGroup } from "@mui/material";
+import CallMade from "@mui/icons-material/CallMade.js";
+
 
 type SquareState = "O" | "X" | null;
 type SquareType = "square" | "square good-square";
@@ -94,21 +97,28 @@ const Game = (props: GameProps) => {
   const squares = history[turn].squares;
   const status = statusLine(squares, turn);
   let moves = history.map((item, i) => {
-    const description = "Go to turn #" + i;
+    const description = "turn #" + i;
     const position = positionStr(item.position);
     const current = i === turn ? "current-turn" : "other-turn";
+    const variant = i === turn ? "outlined" : "text";
     return (
       <li key={i}>
-        <button onClick={() => jumpTo(i)} className={current}>
+        <Button
+          startIcon={<CallMade />}
+          color="primary"
+          variant={variant}
+          size="small"
+          onClick={() => jumpTo(i)}
+          className={current}
+        >
           {description} {position}
-        </button>
+        </Button>
       </li>
     );
   });
   if (direction === "asc") moves = moves.reverse();
   const directionButton = (d: Direction) => (
-    <input
-      type="radio"
+    <Radio
       name="direction"
       value={direction}
       checked={direction === d}
@@ -122,9 +132,9 @@ const Game = (props: GameProps) => {
       </div>
       <div className="game-info">
         <div>{status}</div>
-        <div>
+        <RadioGroup row defaultValue="desc">
           {directionButton("desc")}↓{directionButton("asc")}↑
-        </div>
+        </RadioGroup>
         <ul>{moves}</ul>
       </div>
     </div>
