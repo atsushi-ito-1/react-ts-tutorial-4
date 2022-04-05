@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import {Button, Radio, RadioGroup } from "@mui/material";
+import { Button, Radio, RadioGroup } from "@mui/material";
 import CallMade from "@mui/icons-material/CallMade.js";
-
 
 type SquareState = "O" | "X" | null;
 type SquareType = "square" | "square good-square";
