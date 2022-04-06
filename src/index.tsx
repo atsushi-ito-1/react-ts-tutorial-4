@@ -10,6 +10,7 @@ import {
   Container,
   Stack,
   Box,
+  Grid,
 } from "@mui/material";
 import {
   CallMade,
@@ -25,9 +26,11 @@ type SquareProps = {
   onClick: () => void;
 };
 const Square = (props: SquareProps) => (
-  <button className={props.type} onClick={props.onClick}>
-    {props.value}
-  </button>
+  <Grid item xs={4}>
+    <button className={props.type} onClick={props.onClick}>
+      {props.value}
+    </button>
+  </Grid>
 );
 
 type BoardState = [
@@ -58,25 +61,14 @@ const Board = (props: BoardProps) => {
       />
     );
   };
-  const renderRow = (y: number, pieces: Pieces) => {
-    const row = [];
-    for (let x = 0; x < 3; x++) {
-      row.push(renderSquare(y * 3 + x, pieces));
-    }
-    return (
-      <div className="board-row" key={y}>
-        {row}
-      </div>
-    );
-  };
   let pieces: Pieces = null;
   const winnerState = winner(props.squares);
   if (winnerState) pieces = winnerState.pieces;
   const board = [];
-  for (let y = 0; y < 3; y++) {
-    board.push(renderRow(y, pieces));
+  for (let i = 0; i < 9; i++) {
+    board.push(renderSquare(i, pieces));
   }
-  return <div>{board}</div>;
+  return <Grid container width="147px">{board}</Grid>;
 };
 
 type OneHistory = {
