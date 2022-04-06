@@ -157,7 +157,7 @@ const Game = (props: GameProps) => {
     </ToggleButtonGroup>
   );
   return (
-    <Stack className="game" direction="row">
+    <Stack className="game" direction="row" spacing={2}>
       <Stack className="game-board" spacing={1}>
         <Typography variant="h5">{status}</Typography>
         <Board squares={squares} onClick={(i) => handleClick(i)} />
