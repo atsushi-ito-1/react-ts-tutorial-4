@@ -1,8 +1,22 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import { Button, Radio, RadioGroup } from "@mui/material";
-import CallMade from "@mui/icons-material/CallMade.js";
+import {
+  Button,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+  Tooltip,
+  Card,
+  Container,
+  Stack,
+  Box,
+} from "@mui/material";
+import {
+  CallMade,
+  KeyboardDoubleArrowDown,
+  KeyboardDoubleArrowUp,
+} from "@mui/icons-material";
 
 type SquareState = "O" | "X" | null;
 type SquareType = "square" | "square good-square";
@@ -93,6 +107,12 @@ const Game = (props: GameProps) => {
   function jumpTo(turn: number) {
     setTurn(turn);
   }
+  const changeDirection = (
+    event: React.MouseEvent<HTMLElement>,
+    d: Direction
+  ) => {
+    setDirection(d);
+  };
   const squares = history[turn].squares;
   const status = statusLine(squares, turn);
   let moves = history.map((item, i) => {
@@ -101,7 +121,7 @@ const Game = (props: GameProps) => {
     const current = i === turn ? "current-turn" : "other-turn";
     const variant = i === turn ? "outlined" : "text";
     return (
-      <li key={i}>
+      <Box key={i}>
         <Button
           startIcon={<CallMade />}
           color="primary"
@@ -112,31 +132,41 @@ const Game = (props: GameProps) => {
         >
           {description} {position}
         </Button>
-      </li>
+      </Box>
     );
   });
   if (direction === "asc") moves = moves.reverse();
-  const directionButton = (d: Direction) => (
-    <Radio
-      name="direction"
+  const directionControl = (
+    <ToggleButtonGroup
       value={direction}
-      checked={direction === d}
-      onChange={() => setDirection(d)}
-    />
+      exclusive
+      onChange={changeDirection}
+      aria-label="direction"
+      size="small"
+    >
+      <ToggleButton value="desc" aria-label="descendant" color="primary">
+        <Tooltip title="降順">
+          <KeyboardDoubleArrowDown />
+        </Tooltip>
+      </ToggleButton>
+      <ToggleButton value="asc" aria-label="ascendant" color="primary">
+        <Tooltip title="昇順">
+          <KeyboardDoubleArrowUp />
+        </Tooltip>
+      </ToggleButton>
+    </ToggleButtonGroup>
   );
   return (
-    <div className="game">
-      <div className="game-board">
+    <Stack className="game" direction="row">
+      <Stack className="game-board" spacing={1}>
+        <Typography variant="h5">{status}</Typography>
         <Board squares={squares} onClick={(i) => handleClick(i)} />
-      </div>
-      <div className="game-info">
-        <div>{status}</div>
-        <RadioGroup row defaultValue="desc">
-          {directionButton("desc")}↓{directionButton("asc")}↑
-        </RadioGroup>
-        <ul>{moves}</ul>
-      </div>
-    </div>
+      </Stack>
+      <Stack className="game-info" spacing={1}>
+        <Container>{directionControl}</Container>
+        <Stack className="game-history">{moves}</Stack>
+      </Stack>
+    </Stack>
   );
 };
 
