@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import {
   Button,
   ToggleButton,
@@ -13,25 +12,44 @@ import {
   Grid,
 } from "@mui/material";
 import {
+  AlignHorizontalCenter,
   CallMade,
   KeyboardDoubleArrowDown,
   KeyboardDoubleArrowUp,
 } from "@mui/icons-material";
 
 type SquareState = "O" | "X" | null;
-type SquareType = "square" | "square good-square";
+type SquareType = "normal" | "connected";
 type SquareProps = {
   value: SquareState;
   type: SquareType;
   onClick: () => void;
 };
-const Square = (props: SquareProps) => (
-  <Grid item xs={4}>
-    <button className={props.type} onClick={props.onClick}>
-      {props.value}
-    </button>
-  </Grid>
-);
+const Square = (props: SquareProps) => {
+  const color = props.type === "normal" ? "primary" : "secondary";
+  const background = props.type === "normal" ? "white" : "gold";
+  return (
+    <Grid item xs={4}>
+      <Box
+        sx={{
+          border: "1px solid #999",
+          width: 50,
+          height: 50,
+          background: background,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onClick={props.onClick}
+        justifyContent="center"
+      >
+        <Typography variant="h4" color={color}>
+          {props.value}
+        </Typography>
+      </Box>
+    </Grid>
+  );
+};
 
 type BoardState = [
   SquareState,
@@ -50,8 +68,8 @@ type BoardProps = {
 };
 const Board = (props: BoardProps) => {
   const renderSquare = (i: number, pieces: Pieces) => {
-    let type: SquareType = "square";
-    if (pieces && pieces.includes(i)) type = "square good-square";
+    let type: SquareType = "normal";
+    if (pieces && pieces.includes(i)) type = "connected";
     return (
       <Square
         value={props.squares[i]}
@@ -68,7 +86,11 @@ const Board = (props: BoardProps) => {
   for (let i = 0; i < 9; i++) {
     board.push(renderSquare(i, pieces));
   }
-  return <Grid container width="147px">{board}</Grid>;
+  return (
+    <Grid container width="150px">
+      {board}
+    </Grid>
+  );
 };
 
 type OneHistory = {
