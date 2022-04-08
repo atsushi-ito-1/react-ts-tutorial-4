@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { RecoilRoot, atom, useRecoilState } from "recoil";
 import ReactDOM from "react-dom";
 import {
   Button,
@@ -25,7 +26,6 @@ type SquareProps = {
   onClick: () => void;
 };
 const Square = (props: SquareProps) => {
-  const color = props.type === "normal" ? "primary" : "secondary";
   const background = props.type === "normal" ? "white" : "gold";
   return (
     <Grid item xs={4}>
@@ -42,7 +42,7 @@ const Square = (props: SquareProps) => {
         onClick={props.onClick}
         justifyContent="center"
       >
-        <Typography variant="h4" color={color}>
+        <Typography variant="h4" color="primary">
           {props.value}
         </Typography>
       </Box>
@@ -96,15 +96,14 @@ type OneHistory = {
   squares: BoardState;
   position: number;
 };
-type GameProps = {};
 type Direction = "desc" | "asc";
-const Game = (props: GameProps) => {
-  const initialHistory = [
-    {
-      squares: [null, null, null, null, null, null, null, null, null],
-      position: -1,
-    },
-  ];
+const initialHistory =  [
+  {
+    squares: [null, null, null, null, null, null, null, null, null],
+    position: -1,
+  },
+];
+const Game = () => {
   const [history, setHistory] = useState(initialHistory as OneHistory[]);
   const [turn, setTurn] = useState(0 as number);
   const [direction, setDirection] = useState("desc" as Direction);
@@ -169,16 +168,18 @@ const Game = (props: GameProps) => {
     </ToggleButtonGroup>
   );
   return (
-    <Stack className="game" direction="row" spacing={2}>
-      <Stack className="game-board" spacing={1}>
-        <Typography variant="h5">{status}</Typography>
-        <Board squares={squares} onClick={(i) => handleClick(i)} />
+    <RecoilRoot>
+      <Stack className="game" direction="row" spacing={2}>
+        <Stack className="game-board" spacing={1}>
+          <Typography variant="h5">{status}</Typography>
+          <Board squares={squares} onClick={(i) => handleClick(i)} />
+        </Stack>
+        <Stack className="game-info" spacing={1}>
+          <Container>{directionControl}</Container>
+          <Stack className="game-history">{moves}</Stack>
+        </Stack>
       </Stack>
-      <Stack className="game-info" spacing={1}>
-        <Container>{directionControl}</Container>
-        <Stack className="game-history">{moves}</Stack>
-      </Stack>
-    </Stack>
+    </RecoilRoot>
   );
 };
 
