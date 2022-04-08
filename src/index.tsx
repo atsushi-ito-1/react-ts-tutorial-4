@@ -12,7 +12,6 @@ import {
   Grid,
 } from "@mui/material";
 import {
-  AlignHorizontalCenter,
   CallMade,
   KeyboardDoubleArrowDown,
   KeyboardDoubleArrowUp,
