@@ -20,7 +20,7 @@ export const Board = (props: BoardProps) => {
   const renderSquare = (i: number, pieces: Pieces) => {
     const isConnected = pieces !== null && pieces.includes(i);
     return (
-      <Grid item xs={4} className="game-board">
+      <Grid item xs={4} className="game-board" key={i}>
         <Square
           state={props.board[i]}
           onClick={() => props.onClick(i)}
