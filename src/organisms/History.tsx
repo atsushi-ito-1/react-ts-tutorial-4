@@ -18,7 +18,6 @@ export const History = (props: HistoryProps) => {
   let moves = props.history.map((item, i) => {
     const description = "turn #" + i;
     const position = positionStr(item.position);
-    const current = i === props.turn ? "current-turn" : "other-turn";
     const variant = i === props.turn ? "outlined" : "text";
     return (
       <Box key={i}>
@@ -28,7 +27,6 @@ export const History = (props: HistoryProps) => {
           variant={variant}
           size="small"
           onClick={() => props.onClick(i)}
-          className={current}
         >
           {description} {position}
         </Button>
