@@ -7,7 +7,7 @@ const historyAtom = atom<Memory[]>({
   key: "game/history",
   default: [
     {
-      squares: [null, null, null, null, null, null, null, null, null],
+      board: [null, null, null, null, null, null, null, null, null],
       position: -1,
     },
   ],
@@ -21,16 +21,16 @@ export const Game = () => {
   const [turn, setTurn] = useRecoilState(turnAtom);
   function handleBoardClick(i: number) {
     const subHistory = history.slice(0, turn + 1);
-    const board = last(subHistory).squares.slice();
+    const board: BoardState = [...lastMemory(subHistory).board];
     if (winner(board) || board[i]) return;
     board[i] = pieceMark(turn);
-    setHistory(subHistory.concat([{ squares: board, position: i }]));
+    setHistory(subHistory.concat([{ board: board, position: i }]));
     setTurn(turn + 1);
   }
   function handleHistoryClick(i: number) {
     setTurn(i);
   }
-  const board = history[turn].squares;
+  const board = history[turn].board;
   const status = statusLine(board, turn);
   return (
     <Stack className="game" direction="row" spacing={2}>
@@ -47,7 +47,7 @@ export const Game = () => {
   );
 };
 
-function last(array: any[]) {
+function lastMemory(array: Memory[]): Memory {
   return array.slice(-1)[0];
 }
 

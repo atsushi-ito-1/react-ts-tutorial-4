@@ -5,7 +5,7 @@ import { BoardState } from "../organisms/Board";
 import { DirectionSwitch, directionAtom } from "../molecules/DirectionSwitch";
 
 export type Memory = {
-  squares: BoardState;
+  board: BoardState;
   position: number;
 };
 type HistoryProps = {
