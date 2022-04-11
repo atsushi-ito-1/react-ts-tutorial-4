@@ -24,7 +24,7 @@ export const Game = () => {
     const board: BoardState = [...lastMemory(subHistory).board];
     if (winner(board) || board[i]) return;
     board[i] = pieceMark(turn);
-    setHistory(subHistory.concat([{ board: board, position: i }]));
+    setHistory(subHistory.concat([{ board, position: i }]));
     setTurn(turn + 1);
   }
   function handleHistoryClick(i: number) {
