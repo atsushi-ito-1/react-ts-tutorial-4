@@ -14,14 +14,13 @@ type HistoryProps = {
   onClick: (i: number) => void;
 };
 export const directionState = atom<Direction>({
-  key: "game/direction",
+  key: "game/history/direction",
   default: "desc",
 });
 export const History = (props: HistoryProps) => {
   const [direction, setDirection] = useRecoilState(directionState);
   let moves = props.history.map((item, i) => {
-    const description = "turn #" + i;
-    const position = positionStr(item.position);
+    const description = "turn #" + i + " " + positionStr(item.position);
     const variant = i === props.turn ? "outlined" : "text";
     return (
       <Box key={i}>
@@ -32,7 +31,7 @@ export const History = (props: HistoryProps) => {
           size="small"
           onClick={() => props.onClick(i)}
         >
-          {description} {position}
+          {description}
         </Button>
       </Box>
     );
@@ -41,7 +40,10 @@ export const History = (props: HistoryProps) => {
   return (
     <Stack className="game-history" spacing={1}>
       <Container>
-        <DirectionSwitch direction={direction} onClick={(d) => setDirection(d)}/>
+        <DirectionSwitch
+          direction={direction}
+          onClick={(d) => setDirection(d)}
+        />
       </Container>
       <Stack>{moves}</Stack>
     </Stack>
