@@ -1,8 +1,8 @@
 import { createRoot } from "react-dom/client";
 import { RecoilRoot } from "recoil";
 import { Game } from "./pages/Game";
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import reportWebVitals from "./reportWebVitals";
 
 const App = () => {
   return (
