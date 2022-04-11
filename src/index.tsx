@@ -1,3 +1,4 @@
+import React from "react";
 import { createRoot } from "react-dom/client";
 import { RecoilRoot } from "recoil";
 import { Game } from "./pages/Game";
@@ -7,7 +8,9 @@ import reportWebVitals from "./reportWebVitals";
 const App = () => {
   return (
     <RecoilRoot>
-      <Game />
+      <React.StrictMode>
+        <Game />
+      </React.StrictMode>
     </RecoilRoot>
   );
 };
