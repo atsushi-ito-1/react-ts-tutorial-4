@@ -1,27 +1,24 @@
-import { atom, useRecoilState } from "recoil";
 import { ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
 import {
   KeyboardDoubleArrowDown,
   KeyboardDoubleArrowUp,
 } from "@mui/icons-material";
 
-type Direction = "desc" | "asc";
-export const directionAtom = atom<Direction>({
-  key: "game/direction",
-  default: "desc",
-});
-
-export const DirectionSwitch = () => {
-  const [direction, setDirection] = useRecoilState(directionAtom);
+export type Direction = "desc" | "asc";
+type DirectionSwitchProps = {
+  direction: Direction;
+  onClick: (direction: Direction) => void;
+};
+export const DirectionSwitch = (props: DirectionSwitchProps) => {
   const changeDirection = (
     event: React.MouseEvent<HTMLElement>,
     d: Direction
   ) => {
-    setDirection(d);
+    props.onClick(d);
   };
   return (
     <ToggleButtonGroup
-      value={direction}
+      value={props.direction}
       exclusive
       onChange={changeDirection}
       aria-label="direction"
