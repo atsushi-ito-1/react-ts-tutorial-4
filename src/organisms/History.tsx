@@ -1,11 +1,11 @@
 import { atom, useRecoilState } from "recoil";
 import { Button, Container, Stack, Box } from "@mui/material";
 import { CallMade } from "@mui/icons-material";
-import { BoardState } from "../organisms/Board";
+import { BoardMarks } from "../organisms/Board";
 import { DirectionSwitch, Direction } from "../molecules/DirectionSwitch";
 
 export type Memory = {
-  board: BoardState;
+  board: BoardMarks;
   position: number;
 };
 type HistoryProps = {
@@ -13,12 +13,12 @@ type HistoryProps = {
   turn: number;
   onClick: (i: number) => void;
 };
-export const directionAtom = atom<Direction>({
+export const directionState = atom<Direction>({
   key: "game/direction",
   default: "desc",
 });
 export const History = (props: HistoryProps) => {
-  const [direction, setDirection] = useRecoilState(directionAtom);
+  const [direction, setDirection] = useRecoilState(directionState);
   let moves = props.history.map((item, i) => {
     const description = "turn #" + i;
     const position = positionStr(item.position);

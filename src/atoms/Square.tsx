@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
 
-export type SquareState = "O" | "X" | null;
+export type SquareMark = "O" | "X" | null;
 type SquareProps = {
-  state: SquareState;
+  state: SquareMark;
   isConnected: boolean;
   onClick: () => void;
 };

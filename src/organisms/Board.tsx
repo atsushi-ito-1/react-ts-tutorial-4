@@ -1,19 +1,19 @@
 import { Grid } from "@mui/material";
-import { Square, SquareState } from "../atoms/Square";
+import { Square, SquareMark } from "../atoms/Square";
 
-export type BoardState = [
-  SquareState,
-  SquareState,
-  SquareState,
-  SquareState,
-  SquareState,
-  SquareState,
-  SquareState,
-  SquareState,
-  SquareState
+export type BoardMarks = [
+  SquareMark,
+  SquareMark,
+  SquareMark,
+  SquareMark,
+  SquareMark,
+  SquareMark,
+  SquareMark,
+  SquareMark,
+  SquareMark
 ];
 type BoardProps = {
-  board: BoardState;
+  board: BoardMarks;
   onClick: (i: number) => void;
 };
 export const Board = (props: BoardProps) => {
@@ -31,8 +31,8 @@ export const Board = (props: BoardProps) => {
     );
   };
   let pieces: Pieces = null;
-  const winnerState = winner(props.board);
-  if (winnerState) pieces = winnerState.pieces;
+  const winningCondition = winner(props.board);
+  if (winningCondition) pieces = winningCondition.pieces;
   const board = [];
   for (let i = 0; i < 9; i++) {
     board.push(renderSquare(i, pieces));
@@ -46,11 +46,11 @@ export const Board = (props: BoardProps) => {
 
 type PieceLine = [number, number, number];
 type Pieces = PieceLine | null;
-export type WinnerState = {
-  name: SquareState;
+export type WinningCondition = {
+  name: SquareMark;
   pieces: Pieces;
 } | null;
-export function winner(board: BoardState): WinnerState {
+export function winner(board: BoardMarks): WinningCondition {
   const lines: PieceLine[] = [
     [0, 1, 2],
     [3, 4, 5],
@@ -70,7 +70,7 @@ export function winner(board: BoardState): WinnerState {
   return null;
 }
 
-export function isDraw(board: BoardState) {
+export function isDraw(board: BoardMarks) {
   for (const square of board) {
     if (!square) return false;
   }

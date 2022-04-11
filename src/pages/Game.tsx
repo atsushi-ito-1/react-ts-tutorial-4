@@ -1,9 +1,9 @@
 import { atom, useRecoilState } from "recoil";
 import { Typography, Stack } from "@mui/material";
-import { Board, BoardState, winner, isDraw } from "../organisms/Board";
+import { Board, BoardMarks, winner, isDraw } from "../organisms/Board";
 import { History, Memory } from "../organisms/History";
 
-const historyAtom = atom<Memory[]>({
+const historyState = atom<Memory[]>({
   key: "game/history",
   default: [
     {
@@ -12,16 +12,16 @@ const historyAtom = atom<Memory[]>({
     },
   ],
 });
-const turnAtom = atom<number>({
+const turnState = atom<number>({
   key: "game/turn",
   default: 0,
 });
 export const Game = () => {
-  const [history, setHistory] = useRecoilState(historyAtom);
-  const [turn, setTurn] = useRecoilState(turnAtom);
+  const [history, setHistory] = useRecoilState(historyState);
+  const [turn, setTurn] = useRecoilState(turnState);
   function handleBoardClick(i: number) {
     const subHistory = history.slice(0, turn + 1);
-    const board: BoardState = [...lastMemory(subHistory).board];
+    const board: BoardMarks = [...lastMemory(subHistory).board];
     if (winner(board) || board[i]) return;
     board[i] = pieceMark(turn);
     setHistory(subHistory.concat([{ board, position: i }]));
@@ -55,11 +55,11 @@ function pieceMark(turn: number) {
   return turn % 2 === 0 ? "X" : "O";
 }
 
-function statusLine(board: BoardState, turn: number) {
+function statusLine(board: BoardMarks, turn: number) {
   let status;
-  const winnerState = winner(board);
-  if (winnerState) {
-    status = "Winner: " + winnerState.name;
+  const winningCondition = winner(board);
+  if (winningCondition) {
+    status = "Winner: " + winningCondition.name;
   } else if (isDraw(board)) {
     status = "Draw";
   } else {
