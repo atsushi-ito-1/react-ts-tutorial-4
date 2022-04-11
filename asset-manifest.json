@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.js": "/react-ts-tutorial-4/static/js/main.6ace9b55.js",
+    "static/js/787.3b6728f3.chunk.js": "/react-ts-tutorial-4/static/js/787.3b6728f3.chunk.js",
+    "service-worker.js": "/react-ts-tutorial-4/service-worker.js",
+    "index.html": "/react-ts-tutorial-4/index.html",
+    "main.6ace9b55.js.map": "/react-ts-tutorial-4/static/js/main.6ace9b55.js.map",
+    "787.3b6728f3.chunk.js.map": "/react-ts-tutorial-4/static/js/787.3b6728f3.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.6ace9b55.js"
+  ]
+}
